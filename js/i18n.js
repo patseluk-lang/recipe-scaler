@@ -1,9 +1,5 @@
-/*
- * Recipe Scaler — interface languages.
- * Every language lives in its own file: lang/<code>.js.
- * To add a language: create lang/<code>.js (copy en.js and translate it)
- * and add its code to LANGUAGES below.
- */
+// Interface languages. Each language is a file in lang/.
+// New language: copy lang/en.js to lang/<code>.js, translate it and add the code to LANGUAGES.
 (function () {
   'use strict';
 
@@ -46,7 +42,7 @@
     return window.RS_LANG[FALLBACK] ? FALLBACK : LANGUAGES.find((c) => window.RS_LANG[c]);
   }
 
-  /** Translation by key; {name} placeholders are replaced with vars.name. */
+  // t('cards.meta', { count: 3 }) fills {count} in the string
   function t(key, vars) {
     const dict = (window.RS_LANG[currentLang] || {}).strings || {};
     const fallback = (window.RS_LANG[FALLBACK] || {}).strings || {};
@@ -63,9 +59,8 @@
     return (window.RS_LANG[currentLang] || {}).locale || 'en-GB';
   }
 
-  /** Number formatting for the current language (decimal comma in Ukrainian). */
   function formatNumber(value, maxDigits) {
-    if (!Number.isFinite(value)) return '—';
+    if (!Number.isFinite(value)) return '-';
     return new Intl.NumberFormat(locale(), {
       maximumFractionDigits: maxDigits === undefined ? 1 : maxDigits,
       minimumFractionDigits: 0,
@@ -78,7 +73,6 @@
     return new Intl.DateTimeFormat(locale(), { dateStyle: 'medium', timeStyle: 'short' }).format(date);
   }
 
-  /** Fills every element marked with data-i18n / data-i18n-placeholder / data-i18n-aria-label. */
   function applyStatic(root) {
     const scope = root || document;
     scope.querySelectorAll('[data-i18n]').forEach((el) => {
@@ -94,7 +88,7 @@
       el.textContent = formatNumber(Number(el.getAttribute('data-num')), 2);
     });
     const titleKey = document.body.getAttribute('data-title');
-    if (titleKey) document.title = t(titleKey) + ' — Recipe Scaler';
+    if (titleKey) document.title = t(titleKey) + ' | Recipe Scaler';
     document.documentElement.lang = currentLang;
   }
 
@@ -118,7 +112,7 @@
     try {
       localStorage.setItem(STORAGE_KEY, code);
     } catch (e) {
-      /* the choice just won't be remembered */
+      // private mode: the language just won't be remembered
     }
     applyStatic();
     document.dispatchEvent(new CustomEvent('langchange', { detail: { lang: code } }));
@@ -135,7 +129,6 @@
     t,
     formatNumber,
     formatDate,
-    applyStatic,
     get lang() {
       return currentLang;
     },

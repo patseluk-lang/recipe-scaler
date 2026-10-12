@@ -1,6 +1,5 @@
-/* Recipe Scaler — styles.
-   Palette: kitchen steel, recipe-card paper, basil green for actions,
-   masking-tape yellow for the scaling factor (the tape chefs label containers with). */
+/* Colours: steel background, paper cards, green for actions,
+   yellow "masking tape" for the scaling factor. */
 
 :root {
   --steel: #e4e8e6;
@@ -140,8 +139,6 @@ a:hover {
   display: none !important;
 }
 
-/* ---------- header and footer ---------- */
-
 .site-header {
   background: var(--ink);
   color: var(--paper);
@@ -222,8 +219,6 @@ a:hover {
   padding-top: 20px;
   padding-bottom: 24px;
 }
-
-/* ---------- buttons and fields ---------- */
 
 .actions {
   display: flex;
@@ -351,8 +346,6 @@ select[aria-invalid='true'] {
   border-radius: var(--radius);
 }
 
-/* ---------- the tape label ---------- */
-
 .tape {
   display: inline-block;
   padding: 6px 18px;
@@ -363,12 +356,9 @@ select[aria-invalid='true'] {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   transform: rotate(-2deg);
-  /* torn ends of a strip of masking tape */
   clip-path: polygon(2% 0, 98% 0, 100% 15%, 97% 32%, 100% 50%, 97% 68%, 100% 85%, 98% 100%, 2% 100%, 0 85%, 3% 68%, 0 50%, 3% 32%, 0 15%);
   box-shadow: inset 0 -2px 0 var(--tape-edge);
 }
-
-/* ---------- home ---------- */
 
 .hero {
   display: grid;
@@ -396,7 +386,6 @@ select[aria-invalid='true'] {
   background: var(--paper);
   border-radius: 2px;
   box-shadow: 0 1px 0 var(--line), 0 14px 30px -18px rgba(28, 42, 44, 0.45);
-  /* perforated top edge of a kitchen ticket */
   background-image: radial-gradient(circle at 8px -2px, var(--steel) 5px, transparent 5.5px);
   background-size: 16px 12px;
   background-repeat: repeat-x;
@@ -500,8 +489,6 @@ select[aria-invalid='true'] {
 .rules li {
   margin-bottom: 10px;
 }
-
-/* ---------- calculator ---------- */
 
 .page {
   padding-top: 36px;
@@ -710,8 +697,6 @@ th.num {
   font-weight: 600;
 }
 
-/* ---------- my recipe cards ---------- */
-
 .hint {
   max-width: 70ch;
   font-size: 0.95rem;
@@ -764,8 +749,6 @@ th.num {
   gap: 8px;
 }
 
-/* ---------- small screens ---------- */
-
 @media (max-width: 760px) {
   .hero {
     grid-template-columns: minmax(0, 1fr);
@@ -791,12 +774,6 @@ th.num {
 
   .actions .spacer {
     display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    scroll-behavior: auto !important;
   }
 }
 

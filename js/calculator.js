@@ -1,8 +1,5 @@
-/*
- * Recipe Scaler — calculator page.
- * Keeps what the user typed as text, parses it with Scaler.parseNumber
- * and recalculates on every change.
- */
+// Calculator page. Inputs are kept as the text the user typed and parsed
+// on every change, so "0," in the middle of typing is not lost.
 (function () {
   'use strict';
 
@@ -46,7 +43,7 @@
     return { id: null, name: '', yield: '', rows: [emptyRow(), emptyRow(), emptyRow()] };
   }
 
-  /** Text of a stored number for an input field ("1.5" -> "1,5" in Ukrainian). */
+  // 1.5 -> "1,5" for the Ukrainian interface
   function toText(value) {
     if (!Number.isFinite(value)) return '';
     const text = String(Math.round(value * 1000) / 1000);
@@ -84,7 +81,7 @@
     return item;
   }
 
-  /** Rows the user has not touched at all are ignored. */
+  // empty rows are skipped, not reported as errors
   function isBlank(row) {
     return !row.name.trim() && !row.gross.trim() && !row.count.trim() && !row.pieceWeight.trim();
   }
@@ -103,8 +100,6 @@
       rowIndexes: used.map((entry) => entry.index),
     };
   }
-
-  /* ---------- rendering of the editor ---------- */
 
   function input(field, value, labelKey, extraClass) {
     const el = document.createElement('input');
@@ -152,7 +147,7 @@
       amount.append(
         input('count', row.count, 'amount.count', 'input-num input-short'),
         unit('unit.pcs'),
-        document.createTextNode('×'),
+        document.createTextNode('\u00d7'),
         input('pieceWeight', row.pieceWeight, 'amount.pieceWeight', 'input-num input-short'),
         unit('unit.gPerPc')
       );
@@ -180,7 +175,7 @@
     remove.dataset.action = 'remove';
     remove.setAttribute('aria-label', I18n.t('calc.removeItem'));
     remove.title = I18n.t('calc.removeItem');
-    remove.textContent = '×';
+    remove.textContent = '\u00d7';
     removeCell.appendChild(remove);
 
     tr.append(nameCell, typeCell, amountCell, wasteCell, grossCell, netCell, removeCell);
@@ -198,8 +193,6 @@
     renderRows();
     update();
   }
-
-  /* ---------- recalculation ---------- */
 
   function fmt(value) {
     return I18n.formatNumber(value, 1);
@@ -225,12 +218,12 @@
         totalNet += net;
         anyValid = true;
       } else {
-        grossOut.textContent = '—';
-        netOut.textContent = '—';
+        grossOut.textContent = '-';
+        netOut.textContent = '-';
       }
     });
-    els.totalGross.textContent = anyValid ? fmt(totalGross) : '—';
-    els.totalNet.textContent = anyValid ? fmt(totalNet) : '—';
+    els.totalGross.textContent = anyValid ? fmt(totalGross) : '-';
+    els.totalNet.textContent = anyValid ? fmt(totalNet) : '-';
   }
 
   function updateLimitOptions() {
@@ -302,7 +295,7 @@
     els.resultGross.textContent = fmt(sums.gross);
     els.resultNet.textContent = fmt(sums.net);
 
-    els.factorValue.textContent = '× ' + I18n.formatNumber(k, 3);
+    els.factorValue.textContent = '\u00d7 ' + I18n.formatNumber(k, 3);
     els.newYield.textContent = I18n.t('calc.newYield', { value: fmt(scaled.yield) });
     els.factorBox.hidden = false;
     els.resultWrap.hidden = false;
@@ -314,8 +307,6 @@
     updateLimitOptions();
     updateResult();
   }
-
-  /* ---------- saving ---------- */
 
   function markErrors() {
     const { card, rowIndexes } = currentCard();
@@ -359,8 +350,6 @@
     const time = new Intl.DateTimeFormat(document.documentElement.lang, { timeStyle: 'short' }).format(new Date());
     setStatus(I18n.t('calc.saved', { time }), false);
   }
-
-  /* ---------- events ---------- */
 
   function onRowEvent(event) {
     const el = event.target;
@@ -446,8 +435,6 @@
     renderRows();
     update();
   });
-
-  /* ---------- start ---------- */
 
   I18n.ready.then(() => {
     const id = new URLSearchParams(location.search).get('id');

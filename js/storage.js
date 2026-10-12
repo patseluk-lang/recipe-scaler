@@ -1,7 +1,5 @@
-/*
- * Recipe Scaler — saving recipe cards in the browser (localStorage)
- * and moving them between devices with a JSON file.
- */
+// Recipe cards live in localStorage. Export/import to a JSON file
+// is the only way to move them to another browser.
 (function () {
   'use strict';
 
@@ -19,7 +17,7 @@
     }
   }
 
-  /** Returns true when the cards were written, false when the browser refused. */
+  // false when the browser refuses to store (private mode, full storage)
   function writeAll(cards) {
     try {
       localStorage.setItem(KEY, JSON.stringify(cards));
@@ -41,7 +39,6 @@
     return readAll().find((card) => card.id === id) || null;
   }
 
-  /** Inserts or replaces a card. Returns the saved card, or null when saving failed. */
   function save(card) {
     const cards = readAll();
     const saved = Object.assign({}, card, {
@@ -58,7 +55,7 @@
     return writeAll(readAll().filter((card) => card.id !== id));
   }
 
-  /** Brings a card from a file to the expected shape; returns null if it is not a recipe card. */
+  // A file can be edited by hand, so every field is checked before it gets into storage.
   function normalize(card) {
     if (!card || typeof card !== 'object' || !Array.isArray(card.items)) return null;
     const num = (v) => (typeof v === 'number' && Number.isFinite(v) ? v : NaN);
@@ -86,7 +83,6 @@
     };
   }
 
-  /** Downloads all saved cards as one JSON file. */
   function exportFile() {
     const data = {
       format: FILE_FORMAT,
@@ -105,10 +101,8 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  /**
-   * Reads cards from a file chosen by the user. Cards with the same id are replaced,
-   * new ones are added. Resolves with the number of imported cards; rejects on a bad file.
-   */
+  // A card with the same id is replaced, others are added.
+  // Resolves with the number of imported cards.
   function importFile(file) {
     return file.text().then((text) => {
       let data;

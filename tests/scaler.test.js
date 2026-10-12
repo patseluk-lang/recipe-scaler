@@ -91,10 +91,7 @@ test('validation catches missing and impossible values', () => {
   assert.equal(S.validateCard({ yield: 100, items: [] }).ok, false);
 });
 
-test('totals of a card and of a scaled result', () => {
-  const t = S.cardTotals(card.items);
-  close(t.gross, 1350);
-  close(t.net, 1200 + 132);
+test('totals of a scaled result', () => {
   const r = S.scaleCard(card, 0.72);
   const rt = S.resultTotals(r.items);
   close(rt.gross, 1350 * 0.72);

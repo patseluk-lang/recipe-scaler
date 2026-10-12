@@ -1,6 +1,4 @@
-/*
- * Recipe Scaler — "My recipe cards" page: list, open, delete, export, import.
- */
+// "My recipe cards" page: list, open, delete, export and import.
 (function () {
   'use strict';
 

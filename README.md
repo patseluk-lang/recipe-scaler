@@ -1,29 +1,27 @@
 # Recipe Scaler
 
-A web app for chefs and food technologists that scales a recipe card (technological card) to any yield.
-Enter the card once — items, gross weight and loss percentage (trimming, cooking) — and get the gross and net weight of every item for a new yield.
+Web app for chefs and food technologists. You enter a recipe card (items, gross weight, loss percentage) once, and the app recalculates gross and net weight of every item for a different yield.
 
-**Live demo:** https://patseluk-lang.github.io/recipe-scaler/
+Live: https://patseluk-lang.github.io/recipe-scaler/
 
 ## Features
 
-- **Two ways to scale**
-  - to a target yield;
-  - from a limiting ingredient: enter how much of the scarcest ingredient you have, and every other item is scaled to match.
-- **Gross / net weights** — net weight is calculated from gross weight and the loss percentage of each item.
-- **Items counted in pieces** (eggs, buns) are calculated by weight and rounded to whole pieces, 0.5 rounds up.
-- **No built-in norms** — loss percentages and piece weights are entered by the user for their own kitchen and produce.
-- **Saved recipe cards** — stored in the browser (localStorage); export to a JSON file and import it on another device.
-- **Interface languages** — Ukrainian and English; each language is a separate file.
-- Works without a backend and without a build step.
+- Scaling to a target yield.
+- Scaling from a limiting ingredient: enter how much of the scarcest ingredient you have, the other items follow.
+- Net weight from gross weight and loss percentage. Losses can be negative (cereals that absorb water) or 100 % (bay leaf, bones that are removed after cooking).
+- Items counted in pieces (eggs, buns) are calculated by weight and rounded to whole pieces, 0.5 rounds up.
+- No built-in norms. Loss percentages and piece weights are entered by the user for their own kitchen.
+- Recipe cards are saved in the browser (localStorage) and can be exported to a JSON file and imported on another device.
+- Ukrainian and English interface, one file per language.
+- No backend and no build step.
 
 ## Tech stack
 
-- HTML, CSS, vanilla JavaScript (no frameworks, no dependencies)
-- `localStorage` and the File API for saving, exporting and importing cards
-- `Intl.NumberFormat` / `Intl.DateTimeFormat` for locale-aware numbers and dates
-- Node.js built-in test runner (`node:test`) for the calculation core
-- GitHub Pages for hosting
+- HTML, CSS, vanilla JavaScript, no frameworks or dependencies
+- localStorage and the File API for saving, export and import
+- Intl.NumberFormat and Intl.DateTimeFormat for numbers and dates in each language
+- Node.js built-in test runner (node:test) for the calculation code
+- GitHub Pages hosting
 
 ## Project structure
 
@@ -34,31 +32,33 @@ recipe-scaler/
 ├── recipes.html        # saved recipe cards: open, delete, export, import
 ├── css/style.css
 ├── js/
-│   ├── scaler.js       # calculation core: pure functions, no DOM
-│   ├── storage.js      # localStorage, JSON export / import
-│   ├── i18n.js         # language loading, translation, number formatting
+│   ├── scaler.js       # calculations, no DOM (also used by the tests)
+│   ├── storage.js      # localStorage, JSON export and import
+│   ├── i18n.js         # loading languages, translations, number formatting
 │   ├── calculator.js   # calculator page
 │   └── recipes.js      # "My recipe cards" page
 ├── lang/
 │   ├── uk.js           # Ukrainian
 │   └── en.js           # English
 └── tests/
-    └── scaler.test.js  # tests for the calculation core
+    └── scaler.test.js  # tests for js/scaler.js
 ```
 
-## How the calculation works
+## Formulas
 
 | Value | Formula |
 |---|---|
-| Net weight | `gross × (1 − loss% / 100)`; a negative loss is a weight gain (rice that absorbs water: −150 % → net = gross × 2.5) |
+| Net weight | `gross * (1 - loss / 100)` |
 | Factor for a target yield | `target yield / card yield` |
-| Factor from a limiting ingredient | `amount available / amount in the card` (grams, or pieces for items counted in pieces) |
-| Scaled gross weight | `gross × factor` |
+| Factor from a limiting ingredient | `amount available / amount in the card` (grams, or pieces for piece items) |
+| Scaled gross weight | `gross * factor` |
 | Pieces | `round(scaled gross / weight of one piece)`, 0.5 rounds up |
+
+Loss is allowed from any negative value up to 100 %. Rice with a loss of -150 % gives net = gross * 2.5. A loss above 100 % would give a negative weight, so the app does not accept it.
 
 ## Run locally
 
-The site is static. Clone the repository and serve the folder with any static server, for example:
+The site is static, any local web server will do:
 
 ```bash
 git clone https://github.com/patseluk-lang/recipe-scaler.git
@@ -70,7 +70,7 @@ Then open http://localhost:8000.
 
 ## Tests
 
-Requires Node.js 18 or newer:
+Node.js 18 or newer:
 
 ```bash
 node --test
@@ -79,8 +79,8 @@ node --test
 ## Adding a language
 
 1. Copy `lang/en.js` to `lang/<code>.js` and translate the strings.
-2. Add the language code to the `LANGUAGES` list in `js/i18n.js`.
+2. Add the code to the `LANGUAGES` list in `js/i18n.js`.
 
-## Data and privacy
+## Data
 
-Recipe cards never leave the browser: there is no server and no account. Clearing the browser data deletes them, so use **Export to file** to keep a copy.
+Recipe cards stay in the browser, there is no server and no account. Clearing the browser data deletes them, so keep an exported file as a backup.
