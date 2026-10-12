@@ -1,0 +1,11 @@
+# IDE
+.idea/
+.vscode/
+
+# Python virtual environment (not used by the site)
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db

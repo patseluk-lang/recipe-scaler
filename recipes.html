@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>My recipe cards — Recipe Scaler</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-title="title.cards" data-page="cards">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="index.html">Recipe Scaler</a>
+      <nav class="site-nav">
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <a href="calculator.html" data-i18n="nav.calculator">Calculator</a>
+        <a href="recipes.html" aria-current="page" data-i18n="nav.cards">My recipe cards</a>
+      </nav>
+      <select id="lang-select" class="lang-select" data-i18n-aria-label="nav.language" aria-label="Interface language"></select>
+    </div>
+  </header>
+
+  <main id="main" class="wrap page">
+    <h1 data-i18n="cards.title">My recipe cards</h1>
+
+    <div class="actions">
+      <button type="button" class="button" id="export-cards" data-i18n="cards.export">Export to file</button>
+      <label class="button file-button">
+        <span data-i18n="cards.import">Import from file</span>
+        <input type="file" id="import-file" accept=".json,application/json" class="visually-hidden">
+      </label>
+    </div>
+    <p class="muted hint" data-i18n="cards.hint"></p>
+    <p id="cards-status" class="status" role="status" aria-live="polite"></p>
+
+    <div id="cards-empty" class="empty" hidden>
+      <p data-i18n="cards.empty"></p>
+      <a class="button button-primary" href="calculator.html" data-i18n="cards.create">Create a recipe card</a>
+    </div>
+    <ul id="cards-list" class="card-list"></ul>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <span data-i18n="footer.note">Recipe cards are stored in this browser only.</span>
+      <a href="https://github.com/patseluk-lang/recipe-scaler" data-i18n="footer.source">Source code on GitHub</a>
+    </div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/recipes.js"></script>
+</body>
+</html>

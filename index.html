@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recipe Scaler</title>
+  <meta name="description" content="Recipe card scaling for chefs: gross and net weights for any yield or from a limiting ingredient.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-title="title.home" data-page="home">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="index.html">Recipe Scaler</a>
+      <nav class="site-nav">
+        <a href="index.html" aria-current="page" data-i18n="nav.home">Home</a>
+        <a href="calculator.html" data-i18n="nav.calculator">Calculator</a>
+        <a href="recipes.html" data-i18n="nav.cards">My recipe cards</a>
+      </nav>
+      <select id="lang-select" class="lang-select" data-i18n-aria-label="nav.language" aria-label="Interface language"></select>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero wrap">
+      <div class="hero-text">
+        <h1 data-i18n="home.title">Scale a recipe card to any yield</h1>
+        <p class="lead" data-i18n="home.lead">Enter a recipe card once and get the gross and net weight of every item for the yield you need, or for the ingredient you have the least of.</p>
+        <div class="actions">
+          <a class="button button-primary" href="calculator.html" data-i18n="home.cta">Open the calculator</a>
+          <a class="button" href="recipes.html" data-i18n="home.cards">My recipe cards</a>
+        </div>
+      </div>
+
+      <figure class="ticket" aria-hidden="true">
+        <div class="ticket-head">
+          <span class="ticket-name" data-i18n="ex.name">Syrnyky</span>
+          <span class="ticket-yield"><span data-i18n="ex.base">Yield 1150 g</span><br><span data-i18n="ex.target">Needed 828 g</span></span>
+        </div>
+        <span class="tape tape-hero">× <span data-num="0.72">0.72</span></span>
+        <table class="ticket-table">
+          <tbody>
+            <tr><td data-i18n="ex.item1">Cottage cheese</td><td class="num old" data-num="1000">1000</td><td class="num" data-num="720">720</td></tr>
+            <tr><td data-i18n="ex.item2">Flour</td><td class="num old" data-num="120">120</td><td class="num" data-num="86.4">86.4</td></tr>
+            <tr><td data-i18n="ex.item3">Sugar</td><td class="num old" data-num="80">80</td><td class="num" data-num="57.6">57.6</td></tr>
+            <tr><td data-i18n="ex.item4">Egg, pcs</td><td class="num old" data-num="3">3</td><td class="num" data-num="2">2</td></tr>
+          </tbody>
+        </table>
+      </figure>
+    </section>
+
+    <section class="wrap section">
+      <h2 data-i18n="home.how">How it works</h2>
+      <ol class="steps">
+        <li>
+          <h3 data-i18n="how.1.title">Enter the recipe card</h3>
+          <p data-i18n="how.1.text"></p>
+        </li>
+        <li>
+          <h3 data-i18n="how.2.title">Choose how to scale</h3>
+          <p data-i18n="how.2.text"></p>
+        </li>
+        <li>
+          <h3 data-i18n="how.3.title">Get the result</h3>
+          <p data-i18n="how.3.text"></p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="wrap section">
+      <h2 data-i18n="home.rules">Good to know</h2>
+      <ul class="rules">
+        <li data-i18n="rule.norms"></li>
+        <li data-i18n="rule.responsibility"></li>
+        <li data-i18n="rule.storage"></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <span data-i18n="footer.note">Recipe cards are stored in this browser only.</span>
+      <a href="https://github.com/patseluk-lang/recipe-scaler" data-i18n="footer.source">Source code on GitHub</a>
+    </div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+</body>
+</html>

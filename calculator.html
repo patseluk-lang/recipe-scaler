@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Calculator — Recipe Scaler</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-title="title.calculator" data-page="calculator">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="index.html">Recipe Scaler</a>
+      <nav class="site-nav">
+        <a href="index.html" data-i18n="nav.home">Home</a>
+        <a href="calculator.html" aria-current="page" data-i18n="nav.calculator">Calculator</a>
+        <a href="recipes.html" data-i18n="nav.cards">My recipe cards</a>
+      </nav>
+      <select id="lang-select" class="lang-select" data-i18n-aria-label="nav.language" aria-label="Interface language"></select>
+    </div>
+  </header>
+
+  <main id="main" class="wrap page">
+    <h1 data-i18n="calc.title">Calculator</h1>
+    <p id="load-message" class="notice" hidden></p>
+
+    <section class="panel" aria-labelledby="card-heading">
+      <h2 id="card-heading" data-i18n="calc.card">Recipe card</h2>
+
+      <div class="field-row">
+        <label class="field field-wide">
+          <span data-i18n="calc.name">Dish name</span>
+          <input id="card-name" type="text" autocomplete="off" data-i18n-placeholder="calc.namePh">
+        </label>
+        <label class="field">
+          <span data-i18n="calc.yield">Yield, g</span>
+          <input id="card-yield" type="text" inputmode="decimal" autocomplete="off">
+        </label>
+      </div>
+
+      <h3 data-i18n="calc.items">Items</h3>
+      <div class="table-scroll">
+        <table class="items-table">
+          <thead>
+            <tr>
+              <th scope="col" data-i18n="col.name">Ingredient</th>
+              <th scope="col" data-i18n="col.type">Counted</th>
+              <th scope="col" data-i18n="col.amount">Amount</th>
+              <th scope="col" class="num" data-i18n="col.waste">Waste, %</th>
+              <th scope="col" class="num" data-i18n="col.gross">Gross, g</th>
+              <th scope="col" class="num" data-i18n="col.net">Net, g</th>
+              <th scope="col"><span class="visually-hidden" data-i18n="calc.removeItem">Remove item</span></th>
+            </tr>
+          </thead>
+          <tbody id="items-body"></tbody>
+          <tfoot>
+            <tr>
+              <th scope="row" colspan="4" data-i18n="calc.totals">Total</th>
+              <td class="num" id="total-gross">—</td>
+              <td class="num" id="total-net">—</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="button" id="add-item" data-i18n="calc.addItem">Add item</button>
+        <span class="spacer"></span>
+        <button type="button" class="button" id="new-card" data-i18n="calc.new">New recipe card</button>
+        <button type="button" class="button button-primary" id="save-card" data-i18n="calc.save">Save recipe card</button>
+      </div>
+      <p id="save-status" class="status" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="panel" aria-labelledby="scale-heading">
+      <h2 id="scale-heading" data-i18n="calc.scale">Scaling</h2>
+
+      <fieldset class="modes">
+        <legend class="visually-hidden" data-i18n="mode.legend">Scaling method</legend>
+        <label class="mode">
+          <input type="radio" name="mode" value="yield" checked>
+          <span data-i18n="mode.yield">To the yield you need</span>
+        </label>
+        <label class="mode">
+          <input type="radio" name="mode" value="limit">
+          <span data-i18n="mode.limit">From the ingredient you have the least of</span>
+        </label>
+      </fieldset>
+
+      <div class="field-row" id="mode-yield">
+        <label class="field">
+          <span data-i18n="calc.target">Yield needed, g</span>
+          <input id="target-yield" type="text" inputmode="decimal" autocomplete="off">
+        </label>
+      </div>
+
+      <div class="field-row" id="mode-limit" hidden>
+        <label class="field field-wide">
+          <span data-i18n="calc.limitItem">Ingredient</span>
+          <select id="limit-item"></select>
+        </label>
+        <label class="field">
+          <span id="limit-amount-label">Amount available, g</span>
+          <input id="limit-amount" type="text" inputmode="decimal" autocomplete="off">
+        </label>
+      </div>
+    </section>
+
+    <section class="panel result" aria-labelledby="result-heading" aria-live="polite">
+      <div class="result-head">
+        <h2 id="result-heading" data-i18n="calc.result">Result</h2>
+        <div id="factor-box" class="factor" hidden>
+          <span class="tape" id="factor-value"></span>
+          <span id="new-yield" class="new-yield"></span>
+        </div>
+      </div>
+      <p id="result-waiting" class="muted" data-i18n="calc.waiting"></p>
+      <div class="table-scroll" id="result-wrap" hidden>
+        <table class="result-table">
+          <thead>
+            <tr>
+              <th scope="col" data-i18n="col.name">Ingredient</th>
+              <th scope="col" class="num" data-i18n="col.gross">Gross, g</th>
+              <th scope="col" class="num" data-i18n="col.net">Net, g</th>
+              <th scope="col" class="num" data-i18n="col.pieces">Pieces</th>
+            </tr>
+          </thead>
+          <tbody id="result-body"></tbody>
+          <tfoot>
+            <tr>
+              <th scope="row" data-i18n="calc.totals">Total</th>
+              <td class="num" id="result-gross"></td>
+              <td class="num" id="result-net"></td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <span data-i18n="footer.note">Recipe cards are stored in this browser only.</span>
+      <a href="https://github.com/patseluk-lang/recipe-scaler" data-i18n="footer.source">Source code on GitHub</a>
+    </div>
+  </footer>
+
+  <script src="js/i18n.js"></script>
+  <script src="js/scaler.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/calculator.js"></script>
+</body>
+</html>
