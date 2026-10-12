@@ -84,3 +84,7 @@ node --test
 ## Data
 
 Recipe cards stay in the browser, there is no server and no account. Clearing the browser data deletes them, so keep an exported file as a backup.
+
+## License
+
+Copyright (c) 2026 Dmytro Patseliuk. All rights reserved. See [LICENSE](LICENSE).
