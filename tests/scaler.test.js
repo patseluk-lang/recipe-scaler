@@ -36,6 +36,11 @@ test('net weight from gross and waste', () => {
   close(S.netFromGross(150, 12), 132);
 });
 
+test('negative loss: cereals absorb water and gain weight', () => {
+  close(S.netFromGross(0.158, -150), 0.395); // rice
+  assert.deepEqual(S.validateItem({ name: 'Rice', type: 'weight', gross: 0.158, waste: -150 }), []);
+});
+
 test('scaling to a target yield', () => {
   const k = S.factorByYield(card.yield, 828);
   close(k, 0.72);

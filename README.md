@@ -1,7 +1,7 @@
 # Recipe Scaler
 
 A web app for chefs and food technologists that scales a recipe card (technological card) to any yield.
-Enter the card once — items, gross weight and waste percentage — and get the gross and net weight of every item for a new yield.
+Enter the card once — items, gross weight and loss percentage (trimming, cooking) — and get the gross and net weight of every item for a new yield.
 
 **Live demo:** https://patseluk-lang.github.io/recipe-scaler/
 
@@ -10,9 +10,9 @@ Enter the card once — items, gross weight and waste percentage — and get the
 - **Two ways to scale**
   - to a target yield;
   - from a limiting ingredient: enter how much of the scarcest ingredient you have, and every other item is scaled to match.
-- **Gross / net weights** — net weight is calculated from gross weight and the waste percentage of each item.
+- **Gross / net weights** — net weight is calculated from gross weight and the loss percentage of each item.
 - **Items counted in pieces** (eggs, buns) are calculated by weight and rounded to whole pieces, 0.5 rounds up.
-- **No built-in norms** — waste percentages and piece weights are entered by the user for their own kitchen and produce.
+- **No built-in norms** — loss percentages and piece weights are entered by the user for their own kitchen and produce.
 - **Saved recipe cards** — stored in the browser (localStorage); export to a JSON file and import it on another device.
 - **Interface languages** — Ukrainian and English; each language is a separate file.
 - Works without a backend and without a build step.
@@ -50,7 +50,7 @@ recipe-scaler/
 
 | Value | Formula |
 |---|---|
-| Net weight | `gross × (1 − waste% / 100)` |
+| Net weight | `gross × (1 − loss% / 100)`; a negative loss is a weight gain (rice that absorbs water: −150 % → net = gross × 2.5) |
 | Factor for a target yield | `target yield / card yield` |
 | Factor from a limiting ingredient | `amount available / amount in the card` (grams, or pieces for items counted in pieces) |
 | Scaled gross weight | `gross × factor` |

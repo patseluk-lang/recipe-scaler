@@ -16,7 +16,7 @@
   function parseNumber(value) {
     if (typeof value === 'number') return value;
     if (value === null || value === undefined) return NaN;
-    const text = String(value).trim().replace(/\s+/g, '').replace(',', '.');
+    const text = String(value).trim().replace(/\s+/g, '').replace(',', '.').replace('\u2212', '-');
     if (text === '') return NaN;
     return Number(text);
   }
@@ -26,7 +26,7 @@
     return Math.floor(value + 0.5 + 1e-9);
   }
 
-  /** Net weight from gross weight and waste percentage. */
+  /** Net weight from gross weight and loss percentage. A negative loss means a weight gain. */
   function netFromGross(gross, wastePercent) {
     return gross * (1 - wastePercent / 100);
   }
@@ -63,7 +63,8 @@
     } else if (!positive(item.gross)) {
       errors.push('gross');
     }
-    if (!Number.isFinite(item.waste) || item.waste < 0 || item.waste >= 100) errors.push('waste');
+    // Losses may be negative: cereals absorb water and gain weight (rice -150 % -> net = gross x 2.5).
+    if (!Number.isFinite(item.waste) || item.waste >= 100) errors.push('waste');
     return errors;
   }
 
