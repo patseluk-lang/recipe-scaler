@@ -74,9 +74,17 @@ test('half a piece rounds up after scaling', () => {
   assert.equal(r.items[3].pieces, 2);
 });
 
+test('100 % loss: the item is removed after cooking (bay leaf, bones)', () => {
+  close(S.netFromGross(2, 100), 0);
+  assert.deepEqual(S.validateItem({ name: 'Bay leaf', type: 'weight', gross: 2, waste: 100 }), []);
+  const r = S.scaleCard({ yield: 1000, items: [{ name: 'Bones', type: 'weight', gross: 500, waste: 100 }] }, 2);
+  close(r.items[0].gross, 1000);
+  close(r.items[0].net, 0);
+});
+
 test('validation catches missing and impossible values', () => {
   assert.deepEqual(S.validateItem({ name: 'Milk', type: 'weight', gross: 100, waste: 0 }), []);
-  assert.deepEqual(S.validateItem({ name: '', type: 'weight', gross: 0, waste: 100 }), ['name', 'gross', 'waste']);
+  assert.deepEqual(S.validateItem({ name: '', type: 'weight', gross: 0, waste: 150 }), ['name', 'gross', 'waste']);
   assert.deepEqual(S.validateItem({ name: 'Egg', type: 'piece', count: NaN, pieceWeight: 50, waste: 0 }), ['count']);
   assert.equal(S.validateCard(card).ok, true);
   assert.equal(S.validateCard({ yield: 0, items: card.items }).ok, false);

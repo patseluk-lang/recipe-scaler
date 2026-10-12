@@ -64,7 +64,8 @@
       errors.push('gross');
     }
     // Losses may be negative: cereals absorb water and gain weight (rice -150 % -> net = gross x 2.5).
-    if (!Number.isFinite(item.waste) || item.waste >= 100) errors.push('waste');
+    // 100 % is allowed: the item goes into the pot and is removed (bay leaf, bones), net = 0.
+    if (!Number.isFinite(item.waste) || item.waste > 100) errors.push('waste');
     return errors;
   }
 

@@ -9,3 +9,6 @@ venv/
 # OS
 .DS_Store
 Thumbs.db
+
+# Recipe card exports made while testing the site
+recipe-scaler-*.json
