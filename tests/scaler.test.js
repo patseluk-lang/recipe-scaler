@@ -36,6 +36,14 @@ test('net weight from gross and waste', () => {
   close(S.netFromGross(150, 12), 132);
 });
 
+test('loss % from weighed gross and net', () => {
+  close(S.lossFromNet(158, 118.5), 25);
+  close(S.lossFromNet(158, 395), -150); // rice gains weight
+  close(S.lossFromNet(2, 0), 100); // bay leaf
+  assert.ok(Number.isNaN(S.lossFromNet(0, 10)));
+  assert.ok(Number.isNaN(S.lossFromNet(100, NaN)));
+});
+
 test('negative loss: cereals absorb water and gain weight', () => {
   close(S.netFromGross(0.158, -150), 0.395); // rice
   assert.deepEqual(S.validateItem({ name: 'Rice', type: 'weight', gross: 0.158, waste: -150 }), []);

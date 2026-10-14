@@ -8,7 +8,7 @@ Live: https://patseluk-lang.github.io/recipe-scaler/
 
 - Scaling to a target yield.
 - Scaling from a limiting ingredient: enter how much of the scarcest ingredient you have, the other items follow.
-- Net weight from gross weight and loss percentage. Losses can be negative (cereals that absorb water) or 100 % (bay leaf, bones that are removed after cooking).
+- Enter either the loss percentage or the weighed net weight for an item, the other value is calculated. Losses can be negative (cereals that absorb water) or 100 % (bay leaf, bones that are removed after cooking).
 - Items counted in pieces (eggs, buns) are calculated by weight and rounded to whole pieces, 0.5 rounds up.
 - No built-in norms. Loss percentages and piece weights are entered by the user for their own kitchen.
 - Recipe cards are saved in the browser (localStorage) and can be exported to a JSON file and imported on another device.
@@ -49,6 +49,7 @@ recipe-scaler/
 | Value | Formula |
 |---|---|
 | Net weight | `gross * (1 - loss / 100)` |
+| Loss from weighed net | `(1 - net / gross) * 100` |
 | Factor for a target yield | `target yield / card yield` |
 | Factor from a limiting ingredient | `amount available / amount in the card` (grams, or pieces for piece items) |
 | Scaled gross weight | `gross * factor` |

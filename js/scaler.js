@@ -28,6 +28,12 @@
     return gross * (1 - wastePercent / 100);
   }
 
+  // Loss % from weighed gross and net: 158 g -> 118.5 g gives 25 %.
+  function lossFromNet(gross, net) {
+    if (!(gross > 0) || !Number.isFinite(net)) return NaN;
+    return (1 - net / gross) * 100;
+  }
+
   function itemGross(item) {
     if (item.type === 'piece') return item.count * item.pieceWeight;
     return item.gross;
@@ -105,6 +111,7 @@
     parseNumber,
     roundHalfUp,
     netFromGross,
+    lossFromNet,
     itemGross,
     itemBaseAmount,
     factorByYield,

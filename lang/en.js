@@ -27,7 +27,7 @@ window.RS_LANG.en = {
     'ex.item4': 'Egg, pcs',
     'home.how': 'How it works',
     'how.1.title': 'Enter the recipe card',
-    'how.1.text': 'Name, yield and items with gross weight and loss percentage. Net weight is calculated right away. Cereals that absorb water get a negative loss, for example -150 %.',
+    'how.1.text': 'Name, yield and items with gross weight. Then enter either the loss percentage or the net weight you weighed: the other field is calculated. Cereals that absorb water get a negative loss, for example -150 %.',
     'how.2.title': 'Choose how to scale',
     'how.2.text': 'To the yield you need, or from the ingredient you have the least of: enter how much of it you have and the other items follow.',
     'how.3.title': 'Get the result',

@@ -50,8 +50,8 @@
               <th scope="col" data-i18n="col.name">Ingredient</th>
               <th scope="col" data-i18n="col.type">Counted</th>
               <th scope="col" data-i18n="col.amount">Amount</th>
-              <th scope="col" class="num" data-i18n="col.waste">Waste, %</th>
               <th scope="col" class="num" data-i18n="col.gross">Gross, g</th>
+              <th scope="col" class="num" data-i18n="col.waste">Loss, %</th>
               <th scope="col" class="num" data-i18n="col.net">Net, g</th>
               <th scope="col"><span class="visually-hidden" data-i18n="calc.removeItem">Remove item</span></th>
             </tr>
@@ -59,8 +59,9 @@
           <tbody id="items-body"></tbody>
           <tfoot>
             <tr>
-              <th scope="row" colspan="4" data-i18n="calc.totals">Total</th>
+              <th scope="row" colspan="3" data-i18n="calc.totals">Total</th>
               <td class="num" id="total-gross">-</td>
+              <td></td>
               <td class="num" id="total-net">-</td>
               <td></td>
             </tr>

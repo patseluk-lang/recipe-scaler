@@ -66,6 +66,7 @@
         type: piece ? 'piece' : 'weight',
         waste: num(item && item.waste),
       };
+      if (item && Number.isFinite(item.net)) base.net = item.net;
       if (piece) {
         base.count = num(item.count);
         base.pieceWeight = num(item.pieceWeight);

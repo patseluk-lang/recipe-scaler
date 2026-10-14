@@ -36,7 +36,9 @@
   let state = emptyState();
 
   function emptyRow() {
-    return { name: '', type: 'weight', gross: '', count: '', pieceWeight: '', waste: '0' };
+    // driver: which of the two linked fields the chef typed last, loss % or net weight.
+    // The other one is calculated from it.
+    return { name: '', type: 'weight', gross: '', count: '', pieceWeight: '', waste: '0', net: '', driver: 'waste' };
   }
 
   function emptyState() {
@@ -44,9 +46,10 @@
   }
 
   // 1.5 -> "1,5" for the Ukrainian interface
-  function toText(value) {
+  function toText(value, digits) {
     if (!Number.isFinite(value)) return '';
-    const text = String(Math.round(value * 1000) / 1000);
+    const factor = Math.pow(10, digits === undefined ? 3 : digits);
+    const text = String(Math.round(value * factor) / factor);
     return I18n.lang === 'uk' ? text.replace('.', ',') : text;
   }
 
@@ -62,28 +65,33 @@
         count: toText(item.count),
         pieceWeight: toText(item.pieceWeight),
         waste: toText(item.waste),
+        net: Number.isFinite(item.net) ? toText(item.net) : '',
+        driver: Number.isFinite(item.net) ? 'net' : 'waste',
       })),
     };
   }
 
   function itemFromRow(row) {
-    const item = {
-      name: row.name.trim(),
-      type: row.type,
-      waste: row.waste.trim() === '' ? 0 : S.parseNumber(row.waste),
-    };
+    const item = { name: row.name.trim(), type: row.type };
     if (row.type === 'piece') {
       item.count = S.parseNumber(row.count);
       item.pieceWeight = S.parseNumber(row.pieceWeight);
     } else {
       item.gross = S.parseNumber(row.gross);
     }
+    if (row.driver === 'net') {
+      // keep the weighed net as typed, so it comes back unchanged after saving
+      item.net = S.parseNumber(row.net);
+      item.waste = S.lossFromNet(S.itemGross(item), item.net);
+    } else {
+      item.waste = row.waste.trim() === '' ? 0 : S.parseNumber(row.waste);
+    }
     return item;
   }
 
   // empty rows are skipped, not reported as errors
   function isBlank(row) {
-    return !row.name.trim() && !row.gross.trim() && !row.count.trim() && !row.pieceWeight.trim();
+    return !row.name.trim() && !row.gross.trim() && !row.count.trim() && !row.pieceWeight.trim() && !row.net.trim();
   }
 
   function currentCard() {
@@ -165,8 +173,8 @@
     grossCell.dataset.out = 'gross';
 
     const netCell = document.createElement('td');
-    netCell.className = 'num computed';
-    netCell.dataset.out = 'net';
+    netCell.className = 'num';
+    netCell.appendChild(input('net', row.net, 'col.net', 'input-num'));
 
     const removeCell = document.createElement('td');
     const remove = document.createElement('button');
@@ -178,7 +186,7 @@
     remove.textContent = '\u00d7';
     removeCell.appendChild(remove);
 
-    tr.append(nameCell, typeCell, amountCell, wasteCell, grossCell, netCell, removeCell);
+    tr.append(nameCell, typeCell, amountCell, grossCell, wasteCell, netCell, removeCell);
     return tr;
   }
 
@@ -208,18 +216,23 @@
       const item = itemFromRow(row);
       const errors = S.validateItem(Object.assign({}, item, { name: item.name || '-' }));
       const grossOut = tr.querySelector('[data-out="gross"]');
-      const netOut = tr.querySelector('[data-out="net"]');
+      const gross = S.itemGross(item);
+      // fill in the field the chef did not type: net from loss %, or loss % from net
+      if (row.driver === 'net') {
+        row.waste = toText(item.waste, 2);
+        tr.querySelector('[data-field="waste"]').value = row.waste;
+      } else {
+        row.net = gross > 0 && Number.isFinite(item.waste) ? toText(S.netFromGross(gross, item.waste)) : '';
+        tr.querySelector('[data-field="net"]').value = row.net;
+      }
       if (errors.length === 0) {
-        const gross = S.itemGross(item);
         const net = S.netFromGross(gross, item.waste);
         grossOut.textContent = fmt(gross);
-        netOut.textContent = fmt(net);
         totalGross += gross;
         totalNet += net;
         anyValid = true;
       } else {
         grossOut.textContent = '-';
-        netOut.textContent = '-';
       }
     });
     els.totalGross.textContent = anyValid ? fmt(totalGross) : '-';
@@ -315,7 +328,9 @@
     els.body.querySelectorAll('[aria-invalid]').forEach((el) => el.removeAttribute('aria-invalid'));
     check.items.forEach((errors, position) => {
       const tr = els.body.querySelector('tr[data-index="' + rowIndexes[position] + '"]');
-      errors.forEach((field) => {
+      const row = state.rows[rowIndexes[position]];
+      errors.forEach((error) => {
+        const field = error === 'waste' && row.driver === 'net' ? 'net' : error;
         const el = tr && tr.querySelector('[data-field="' + field + '"]');
         if (el) el.setAttribute('aria-invalid', 'true');
       });
@@ -357,6 +372,10 @@
     if (!tr || !el.dataset.field) return;
     const row = state.rows[Number(tr.dataset.index)];
     row[el.dataset.field] = el.value;
+    if (el.dataset.field === 'net' || el.dataset.field === 'waste') {
+      row.driver = el.dataset.field;
+      tr.querySelectorAll('[data-field="net"], [data-field="waste"]').forEach((f) => f.removeAttribute('aria-invalid'));
+    }
     el.removeAttribute('aria-invalid');
     if (el.dataset.field === 'type') {
       const fresh = renderRow(row, Number(tr.dataset.index));
@@ -431,7 +450,20 @@
   els.limitAmount.addEventListener('input', update);
   els.limitItem.addEventListener('change', update);
 
+  function retype(text) {
+    const value = S.parseNumber(text);
+    return Number.isFinite(value) ? toText(value) : text;
+  }
+
   document.addEventListener('langchange', () => {
+    // decimal comma in Ukrainian, dot in English
+    state.yield = retype(state.yield);
+    els.yield.value = state.yield;
+    state.rows.forEach((row) => {
+      ['gross', 'count', 'pieceWeight', 'waste', 'net'].forEach((field) => {
+        row[field] = retype(row[field]);
+      });
+    });
     renderRows();
     update();
   });
